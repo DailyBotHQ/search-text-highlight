@@ -24,14 +24,14 @@ yarn add search-text-highlight
 
 Import
 ```javascript
-> import searchTextHighlight from 'search-text-highlight'
+> import searchTextHl from 'search-text-highlight'
 ```
 
 Basic usage.
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
-> searchTextHighlight.highlight(text, query)
+> searchTextHl.highlight(text, query)
 This is a simple but an <span class="text-highlight">amazing</span> tool for text highlight 😎.
 ```
 
@@ -39,7 +39,7 @@ Highlight multiple match substrings.
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'a'
-> searchTextHighlight.highlight(text, query)
+> searchTextHl.highlight(text, query)
 This is <span class="text-highlight">a</span> simple but <span class="text-highlight">a</span>n <span class="text-highlight">a</span>m<span class="text-highlight">a</span>zing tool for text highlight 😎.
 ```
 
@@ -48,7 +48,7 @@ Customize html tag; the default is a `span`.
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
 > const htmlTag = 'label'
-> searchTextHighlight.highlight(text, query, htmlTag)
+> searchTextHl.highlight(text, query, htmlTag)
 This is a simple but an <label class="text-highlight">amazing</label> tool for text highlight 😎.
 ```
 
@@ -57,8 +57,8 @@ Customize highlight class.
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
 > const htmlTag = 'label'
-> const highlightClass = 'custom-class'
-> searchTextHighlight.highlight(text, query, htmlTag, highlightClass)
+> const hlClass = 'custom-class'
+> searchTextHl.highlight(text, query, htmlTag, hlClass)
 This is a simple but an <label class="custom-class">amazing</label> tool for text highlight 😎.
 ```
 
@@ -67,23 +67,23 @@ Highlight only the first query match.
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
 > const htmlTag = 'label'
-> const highlightClass = 'custom-class'
+> const hlClass = 'custom-class'
 > const matchAll = false
-> searchTextHighlight.highlight(text, query, htmlTag, highlightClass, matchAll)
+> searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
 This is <label class="custom-class">a</label> simple but an amazing tool for text highlight 😎.
 ```
 
 
 ## All value params for `highlight` method
 
-text, query, htmlTag, highlightClass
+text, query, htmlTag, hlClass
 
 | Name           | Type    | Default            | Description                                                      |
 | :------------- | :------ | :----------------- | :--------------------------------------------------------------- |
 | text           | string  | ''                 | base message                                                     |
 | query          | string  | ''                 | substring for highlight in message                               |
 | htmlTag        | string  | 'span'             | custom highlight HTML Tag wrapper                                |
-| highlightClass | string  | 'text-highlight'   | custom highlight class                                           |
+| hlClass        | string  | 'text-highlight'   | custom highlight class                                           |
 | matchAll       | boolean | true               | match all instances of the query in text message, not just one   |
 
 

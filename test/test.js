@@ -1,32 +1,32 @@
 import assert from 'assert'
-import searchTextHighlight from '../src/main'
+import searchTextHl from '../src/main'
 
 describe('Test search text highlight', () => {
   it('should highlight one query substring', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'amazing'
-    const result = searchTextHighlight.highlight(text, query)
+    const result = searchTextHl.highlight(text, query)
     assert.equal(result, 'This is a simple but an <span class="text-highlight">amazing</span> tool for text highlight 😎.')
   })
 
   it('should highlight multiple query substrings', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'a'
-    const result = searchTextHighlight.highlight(text, query)
+    const result = searchTextHl.highlight(text, query)
     assert.equal(result, 'This is <span class="text-highlight">a</span> simple but <span class="text-highlight">a</span>n <span class="text-highlight">a</span>m<span class="text-highlight">a</span>zing tool for text highlight 😎.')
   })
 
   it('should highlight an unicode substring', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = '😎'
-    const result = searchTextHighlight.highlight(text, query)
+    const result = searchTextHl.highlight(text, query)
     assert.equal(result, 'This is a simple but an amazing tool for text highlight <span class="text-highlight">😎</span>.')
   })
 
   it('should do nothing with empty queries', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = ''
-    const result = searchTextHighlight.highlight(text, query)
+    const result = searchTextHl.highlight(text, query)
     assert.equal(result, text)
   })
 
@@ -34,7 +34,7 @@ describe('Test search text highlight', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'amazing'
     const htmlTag = 'label'
-    const result = searchTextHighlight.highlight(text, query, htmlTag)
+    const result = searchTextHl.highlight(text, query, htmlTag)
     assert.equal(result, 'This is a simple but an <label class="text-highlight">amazing</label> tool for text highlight 😎.')
   })
 
@@ -42,8 +42,8 @@ describe('Test search text highlight', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'amazing'
     const htmlTag = 'label'
-    const highlightClass = 'custom-class'
-    const result = searchTextHighlight.highlight(text, query, htmlTag, highlightClass)
+    const hlClass = 'custom-class'
+    const result = searchTextHl.highlight(text, query, htmlTag, hlClass)
     assert.equal(result, 'This is a simple but an <label class="custom-class">amazing</label> tool for text highlight 😎.')
   })
 
@@ -51,60 +51,60 @@ describe('Test search text highlight', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'a'
     const htmlTag = 'span'
-    const highlightClass = 'text-highlight'
+    const hlClass = 'text-highlight'
     const matchAll = false
-    const result = searchTextHighlight.highlight(text, query, htmlTag, highlightClass, matchAll)
+    const result = searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
     assert.equal(result, 'This is <span class="text-highlight">a</span> simple but an amazing tool for text highlight 😎.')
   })
 
   it('should throw error with not the right type parameter', () => {
     let text = 42
     assert.throws(() => {
-      searchTextHighlight.highlight(text)
+      searchTextHl.highlight(text)
     }, Error)
 
     text = true
     assert.throws(() => {
-      searchTextHighlight.highlight(text)
+      searchTextHl.highlight(text)
     }, Error)
 
     text = 'This is a simple but an amazing tool for text highlight 😎.'
     let query = 5
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query)
+      searchTextHl.highlight(text, query)
     }, Error)
 
     query = true
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query)
+      searchTextHl.highlight(text, query)
     }, Error)
 
     query = 'amazing'
     let htmlTag = 563
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query, htmlTag)
+      searchTextHl.highlight(text, query, htmlTag)
     }, Error)
 
     htmlTag = false
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query, htmlTag)
+      searchTextHl.highlight(text, query, htmlTag)
     }, Error)
 
     htmlTag = 'label'
-    let highlightClass = 50.0
+    let hlClass = 50.0
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query, htmlTag, highlightClass)
+      searchTextHl.highlight(text, query, htmlTag, hlClass)
     }, Error)
 
-    highlightClass = true
+    hlClass = true
     let matchAll = 'true'
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query, htmlTag, highlightClass, matchAll)
+      searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
     }, Error)
 
     matchAll = 1
     assert.throws(() => {
-      searchTextHighlight.highlight(text, query, htmlTag, highlightClass, matchAll)
+      searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
     }, Error)
   })
 })
