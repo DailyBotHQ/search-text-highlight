@@ -1,0 +1,53 @@
+{
+  "name": "search-text-highlight",
+  "version": "0.0.1",
+  "description": "This tool allow find a string or substring from a text and highlight it with html wrapper with unicode support.",
+  "keywords": [
+    "search",
+    "text",
+    "highlight",
+    "highlighter",
+    "html-wrapper",
+    "unicode-support"
+  ],
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "mocha --require @babel/register test/test.js --timeout 25000 --colors",
+    "test:watch": "mocha -w --require @babel/register test/test.js --timeout 25000 --colors",
+    "build": "webpack --mode production --progress",
+    "build:dev": "webpack --mode development --progress",
+    "release": "standard-version",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockalabs/search-text-highlight.git"
+  },
+  "author": "@xergioalex",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rockalabs/search-text-highlight/issues"
+  },
+  "homepage": "https://github.com/rockalabs/search-text-highlight#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.6.0",
+    "source-map-support": "^0.5.13"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.4.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/register": "^7.6.0",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "mocha": "^6.2.0",
+    "standard-version": "^7.0.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
