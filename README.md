@@ -65,7 +65,7 @@ This is a simple but an <label class="custom-class">amazing</label> tool for tex
 Highlight only the first query match.
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
-> const query = 'amazing'
+> const query = 'a'
 > const htmlTag = 'label'
 > const hlClass = 'custom-class'
 > const matchAll = false
