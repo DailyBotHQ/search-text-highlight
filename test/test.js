@@ -33,28 +33,33 @@ describe('Test search text highlight', () => {
   it('should be able to replace the default HTML tag', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'amazing'
-    const htmlTag = 'label'
-    const result = searchTextHl.highlight(text, query, htmlTag)
+    const options = { htmlTag: 'label' }
+    const result = searchTextHl.highlight(text, query, options)
     assert.equal(result, 'This is a simple but an <label class="text-highlight">amazing</label> tool for text highlight 😎.')
   })
 
   it('should be able to replace the default highlight class', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'amazing'
-    const htmlTag = 'label'
-    const hlClass = 'custom-class'
-    const result = searchTextHl.highlight(text, query, htmlTag, hlClass)
+    const options = { htmlTag: 'label', hlClass: 'custom-class' }
+    const result = searchTextHl.highlight(text, query, options)
     assert.equal(result, 'This is a simple but an <label class="custom-class">amazing</label> tool for text highlight 😎.')
   })
 
   it('should be able to highlight only the first query match', () => {
     const text = 'This is a simple but an amazing tool for text highlight 😎.'
     const query = 'a'
-    const htmlTag = 'span'
-    const hlClass = 'text-highlight'
-    const matchAll = false
-    const result = searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
+    const options = { matchAll: false }
+    const result = searchTextHl.highlight(text, query, options)
     assert.equal(result, 'This is <span class="text-highlight">a</span> simple but an amazing tool for text highlight 😎.')
+  })
+
+  it('should be able to highlight witch case sensitve match', () => {
+    const text = 'This is a simple but an amazing tool for text highlight 😎.'
+    const query = 'Amazing'
+    const options = { caseSensitive: true }
+    const result = searchTextHl.highlight(text, query, options)
+    assert.equal(result, 'This is a simple but an amazing tool for text highlight 😎.')
   })
 
   it('should throw error with not the right type parameter', () => {
@@ -80,31 +85,51 @@ describe('Test search text highlight', () => {
     }, Error)
 
     query = 'amazing'
-    let htmlTag = 563
+
+    let options = true
     assert.throws(() => {
-      searchTextHl.highlight(text, query, htmlTag)
+      searchTextHl.highlight(text, query, options)
     }, Error)
 
-    htmlTag = false
+    options = { htmlTag: 563 }
     assert.throws(() => {
-      searchTextHl.highlight(text, query, htmlTag)
+      searchTextHl.highlight(text, query, options)
     }, Error)
 
-    htmlTag = 'label'
-    let hlClass = 50.0
+    options = { htmlTag: false }
     assert.throws(() => {
-      searchTextHl.highlight(text, query, htmlTag, hlClass)
+      searchTextHl.highlight(text, query, options)
     }, Error)
 
-    hlClass = true
-    let matchAll = 'true'
+    options = { hlClass: 50.0 }
     assert.throws(() => {
-      searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
+      searchTextHl.highlight(text, query, options)
     }, Error)
 
-    matchAll = 1
+    options = { hlClass: true }
     assert.throws(() => {
-      searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
+      searchTextHl.highlight(text, query, options)
     }, Error)
+
+    options = { matchAll: 'true' }
+    assert.throws(() => {
+      searchTextHl.highlight(text, query, options)
+    }, Error)
+
+    options = { matchAll: 1 }
+    assert.throws(() => {
+      searchTextHl.highlight(text, query, options)
+    }, Error)
+
+    options = { caseSensitive: 42 }
+    assert.throws(() => {
+      searchTextHl.highlight(text, query, options)
+    }, Error)
+
+    options = { caseSensitive: 'false' }
+    assert.throws(() => {
+      searchTextHl.highlight(text, query, options)
+    }, Error)
+
   })
 })

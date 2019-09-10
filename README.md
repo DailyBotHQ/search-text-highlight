@@ -47,8 +47,8 @@ Customize html tag; the default is a `span`.
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
-> const htmlTag = 'label'
-> searchTextHl.highlight(text, query, htmlTag)
+> const options = { htmlTag: 'label' }
+> searchTextHl.highlight(text, query, options)
 This is a simple but an <label class="text-highlight">amazing</label> tool for text highlight 😎.
 ```
 
@@ -56,9 +56,8 @@ Customize highlight class.
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
-> const htmlTag = 'label'
-> const hlClass = 'custom-class'
-> searchTextHl.highlight(text, query, htmlTag, hlClass)
+> const options = { htmlTag: 'label', hlClass: 'custom-class' }
+> searchTextHl.highlight(text, query, options)
 This is a simple but an <label class="custom-class">amazing</label> tool for text highlight 😎.
 ```
 
@@ -66,25 +65,37 @@ Highlight only the first query match.
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'a'
-> const htmlTag = 'label'
-> const hlClass = 'custom-class'
-> const matchAll = false
-> searchTextHl.highlight(text, query, htmlTag, hlClass, matchAll)
+> const options = { htmlTag: 'label', hlClass: 'custom-class', matchAll: false }
+> searchTextHl.highlight(text, query, options)
 This is <label class="custom-class">a</label> simple but an amazing tool for text highlight 😎.
+```
+
+Highlight with a case sensitive query
+```javascript
+> const text = 'This is a simple but an amazing tool for text highlight 😎.'
+> const query = 'AMAZING'
+> const options = { caseSensitive: true }
+> searchTextHl.highlight(text, query, options)
+This is a simple but an amazing tool for text highlight 😎.
 ```
 
 
 ## All value params for `highlight` method
 
-text, query, htmlTag, hlClass
+| Name           | Type    | Default            | Description                            |
+| :------------- | :------ | :----------------- | :------------------------------------- |
+| text           | string  | ''                 | base message                           |
+| query          | string  | ''                 | substring for highlight in message     |
+| options        | object  | {}                 | parameterizable options for highlight  |
 
-| Name           | Type    | Default            | Description                                                      |
-| :------------- | :------ | :----------------- | :--------------------------------------------------------------- |
-| text           | string  | ''                 | base message                                                     |
-| query          | string  | ''                 | substring for highlight in message                               |
-| htmlTag        | string  | 'span'             | custom highlight HTML Tag wrapper                                |
-| hlClass        | string  | 'text-highlight'   | custom highlight class                                           |
-| matchAll       | boolean | true               | match all instances of the query in text message, not just one   |
+### All properties of highlight `options`
+
+| Name           | Type    | Default            | Description                                                                             |
+| :------------- | :------ | :----------------- | :---------------------------------------------------------------                        |
+| htmlTag        | string  | 'span'             | custom highlight HTML Tag wrapper                                                       |
+| hlClass        | string  | 'text-highlight'   | custom highlight class                                                                  |
+| matchAll       | boolean | true               | match all instances of the query in text message, not just one                          |
+| caseSensitive  | boolean | false              | match query text distinguish between uppercase (capital) and lowercase (small) letters  |
 
 
 
