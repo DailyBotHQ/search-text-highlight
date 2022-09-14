@@ -1,6 +1,6 @@
 {
   "name": "search-text-highlight",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "This tool allow find a string or substring from a text and highlight it with html wrapper with unicode support.",
   "keywords": [
     "search",
@@ -10,44 +10,46 @@
     "html-wrapper",
     "unicode-support"
   ],
-  "main": "dist/main.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --require @babel/register test/test.js --timeout 25000 --colors",
-    "test:watch": "mocha -w --require @babel/register test/test.js --timeout 25000 --colors",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "test": "mocha --require ts-node/register test/**.ts --timeout 25000 --colors",
+    "test:watch": "mocha -w --watch-extensions ts --require ts-node/register --watch-files src,test test/**.ts --timeout 25000 --colors",
+    "release": "npm version patch -m \"[🤖 DailyBot] New release to v%s launched 🚀\"",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
     "build": "webpack --mode production --progress",
     "build:dev": "webpack --mode development --progress",
-    "release": "standard-version",
-    "prepare": "npm run build"
+    "build:tsc": "tsc --build tsconfig.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rockalabs/search-text-highlight.git"
+    "url": "git+https://github.com/DailyBotHQ/search-text-highlight.git"
   },
-  "author": "@xergioalex",
+  "author": "DailyBot <support@dailybot.com> (https://dailybot.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rockalabs/search-text-highlight/issues"
+    "url": "https://github.com/DailyBotHQ/search-text-highlight/issues"
   },
-  "homepage": "https://github.com/rockalabs/search-text-highlight#readme",
-  "dependencies": {
-    "@babel/runtime": "^7.6.0",
-    "source-map-support": "^0.5.13"
-  },
+  "homepage": "https://github.com/DailyBotHQ/search-text-highlight#readme",
+  "dependencies": {},
   "devDependencies": {
-    "@babel/cli": "^7.6.0",
-    "@babel/core": "^7.6.0",
-    "@babel/plugin-transform-flow-strip-types": "^7.4.4",
-    "@babel/plugin-transform-modules-commonjs": "^7.6.0",
-    "@babel/plugin-transform-runtime": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "@babel/register": "^7.6.0",
-    "babel-loader": "^8.0.6",
-    "clean-webpack-plugin": "^3.0.0",
-    "mocha": "^6.2.0",
-    "standard-version": "^7.0.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.8",
-    "webpack-node-externals": "^1.7.2"
+    "@types/chai": "4.3.3",
+    "@types/mocha": "9.1.1",
+    "@types/node": "18.7.18",
+    "@typescript-eslint/eslint-plugin": "5.37.0",
+    "@typescript-eslint/parser": "5.37.0",
+    "chai": "4.3.6",
+    "clean-webpack-plugin": "4.0.0",
+    "eslint": "8.23.1",
+    "mocha": "10.0.0",
+    "nodemon": "2.0.19 ",
+    "ts-loader": "9.3.1",
+    "ts-node": "10.9.1",
+    "typescript": "4.8.3",
+    "webpack": "5.74.0",
+    "webpack-cli": "4.10.0",
+    "eslint-webpack-plugin": "3.2.0"
   }
 }
