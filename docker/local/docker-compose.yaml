@@ -1,0 +1,20 @@
+version: '3.2'
+
+services:
+  searchtexthl: &searchtexthl
+    user: "${UID}"
+    build:
+      context: .
+      dockerfile: ./searchTextHL/Dockerfile
+    working_dir: /app
+    volumes:
+      - ../..:/app
+    env_file:
+      - searchTextHL/.env
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm install
+        chown -R ${SERVICE_PERMISSIONS} /app
+        sleep infinity
