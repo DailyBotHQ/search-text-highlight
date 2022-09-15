@@ -98,6 +98,24 @@ This is a simple but an amazing tool for text highlight 😎.
 | caseSensitive  | boolean | false              | match query text distinguish between uppercase (capital) and lowercase (small) letters  |
 
 
+### Css Styles
+
+You can use these css styles in your html code to highlight the found text.
+```css
+:root {
+  --light-blue-color: #b1d9ff;
+  --dark-blue-color: #508fca;
+}
+
+.text-highlight {
+  background: var(--light-blue-color);
+  border-radius: 2px;
+  padding: 0 2px;
+  border: 1px solid var(--dark-blue-color);
+}
+```
+
+
 
 ## :electric_plug: Powered by [DailyBot](https://www.dailybot.com?utm_source=dailybotopensource&utm_medium=search-text-highlight)
 
