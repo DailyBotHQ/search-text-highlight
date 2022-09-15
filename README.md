@@ -88,6 +88,7 @@ This is a simple but an amazing tool for text highlight 😎.
 | query          | string  | ''                 | substring for highlight in message     |
 | options        | object  | {}                 | parameterizable options for highlight  |
 
+
 ### All properties of highlight `options`
 
 | Name           | Type    | Default            | Description                                                                             |
