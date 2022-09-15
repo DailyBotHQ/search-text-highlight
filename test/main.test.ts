@@ -132,4 +132,73 @@ describe('Test search text highlight', () => {
     }).to
   })
 
+  it('should throw error with not the right type parameter 1', () => {
+    let text: any = 42  // eslint-disable-line
+    expect(() => {
+      searchTextHL.highlight(text, '')
+    }).to.throw(Error)
+
+    text = true
+    expect(() => {
+      searchTextHL.highlight(text, '')
+    }).to.throw(Error)
+
+    text = 'This is a simple but an amazing tool for text highlight 😎.'
+    let query: any = 5  // eslint-disable-line
+    expect(() => {
+      searchTextHL.highlight(text, query)
+    }).to.throw(Error)
+
+    query = true
+    expect(() => {
+      searchTextHL.highlight(text, query)
+    }).to
+
+    query = 'amazing'
+    let options: any = true  // eslint-disable-line
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { htmlTag: 563 }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { htmlTag: false }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { hlClass: 50.0 }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { hlClass: true }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { matchAll: 'true' }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { matchAll: 1 }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { caseSensitive: 42 }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+
+    options = { caseSensitive: 'false' }
+    expect(() => {
+      searchTextHL.highlight(text, query, options)
+    }).to
+  })
+
 })
