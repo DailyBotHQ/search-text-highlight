@@ -131,5 +131,4 @@ describe('Test search text highlight', () => {
       searchTextHL.highlight(text, query, options)
     }).to
   })
-
 })
