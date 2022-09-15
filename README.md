@@ -1,6 +1,6 @@
 # Search Text Highlight
 
-This tool allow find a string or substring from a text and highlight it with html wrapper with unicode support.
+This tool allow find a string or substring from a text and highlight it with html wrapper and unicode support.
 
 ---
 
