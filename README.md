@@ -101,7 +101,7 @@ This is a simple but an amazing tool for text highlight 😎.
 
 ### Css Styles
 
-You can use these css styles in your html code to highlight the found text.
+Use these css styles in your html code to highlight the found text.
 ```css
 :root {
   --light-blue-color: #b1d9ff;
