@@ -45,6 +45,7 @@ jobs:
           git add .
           git commit -am "[🤖 DailyBot] Minor updates on package versions." || echo "[🤖 DailyBot] No changes to commit"
           npm run release
+          git remote -v
           git push --follow-tags origin main
       - name: Step 6 - 🏷️ Set GitHub release "TAG" env vars
         run: |
