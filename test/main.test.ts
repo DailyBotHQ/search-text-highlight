@@ -83,52 +83,52 @@ describe('Test search text highlight', () => {
     query = true
     expect(() => {
       searchTextHL.highlight(text, query)
-    }).to
+    }).to.throw(Error)
 
     query = 'amazing'
     let options: any = true  // eslint-disable-line
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { htmlTag: 563 }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { htmlTag: false }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { hlClass: 50.0 }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { hlClass: true }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { matchAll: 'true' }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { matchAll: 1 }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { caseSensitive: 42 }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
 
     options = { caseSensitive: 'false' }
     expect(() => {
       searchTextHL.highlight(text, query, options)
-    }).to
+    }).to.throw(Error)
   })
 })
