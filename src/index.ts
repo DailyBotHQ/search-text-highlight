@@ -7,11 +7,7 @@ import Utils from './lib/utils'
  * @return {string}
  */
 const searchTextHL: SearchTextHLType = {
-  highlight(
-    text: string = '',
-    query: string = '',
-    options: OptionsType = {}
-  ): string {
+  highlight(text: string = '', query: string = '', options: OptionsType = {}): string {
     Utils.validate.highlight(text, query, options)
 
     options = Utils.getOptions(options)

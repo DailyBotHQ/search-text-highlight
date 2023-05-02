@@ -71,9 +71,7 @@ describe('Test search text highlight', () => {
     const query = 'Amazing'
     const options = { caseSensitive: true }
     const result = searchTextHL.highlight(text, query, options)
-    expect(result).to.be.equal(
-      'This is a simple but an amazing tool for text highlight 😎.'
-    )
+    expect(result).to.be.equal('This is a simple but an amazing tool for text highlight 😎.')
   })
 
   it('should throw error with not the right type parameter', () => {
