@@ -8,8 +8,6 @@ This tool allow find a string or substring from a text and highlight it with htm
 [![GitHub stars](https://img.shields.io/github/stars/DailyBotHQ/search-text-highlight)](https://github.com/DailyBotHQ/search-text-highlight)
 [![total downloads](https://img.shields.io/npm/dt/search-text-highlight.svg)](https://www.npmjs.com/package/search-text-highlight)
 
-
-
 ## Installation
 
 ```
@@ -23,11 +21,13 @@ yarn add search-text-highlight
 ## Usage
 
 Import
+
 ```javascript
 > import searchTextHL from 'search-text-highlight'
 ```
 
 Basic usage.
+
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
@@ -36,6 +36,7 @@ This is a simple but an <span class="text-highlight">amazing</span> tool for tex
 ```
 
 Highlight multiple match substrings.
+
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'a'
@@ -44,6 +45,7 @@ This is <span class="text-highlight">a</span> simple but <span class="text-highl
 ```
 
 Customize html tag; the default is a `span`.
+
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
@@ -53,6 +55,7 @@ This is a simple but an <label class="text-highlight">amazing</label> tool for t
 ```
 
 Customize highlight class.
+
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'amazing'
@@ -62,6 +65,7 @@ This is a simple but an <label class="custom-class">amazing</label> tool for tex
 ```
 
 Highlight only the first query match.
+
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'a'
@@ -71,6 +75,7 @@ This is <label class="custom-class">a</label> simple but an amazing tool for tex
 ```
 
 Highlight with a case sensitive query
+
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
 > const query = 'AMAZING'
@@ -79,29 +84,27 @@ Highlight with a case sensitive query
 This is a simple but an amazing tool for text highlight 😎.
 ```
 
-
 ## All value params for `highlight` method
 
-| Name           | Type    | Default            | Description                            |
-| :------------- | :------ | :----------------- | :------------------------------------- |
-| text           | string  | ''                 | base message                           |
-| query          | string  | ''                 | substring for highlight in message     |
-| options        | object  | {}                 | parameterizable options for highlight  |
-
+| Name    | Type   | Default | Description                           |
+| :------ | :----- | :------ | :------------------------------------ |
+| text    | string | ''      | base message                          |
+| query   | string | ''      | substring for highlight in message    |
+| options | object | {}      | parameterizable options for highlight |
 
 ### All properties of highlight `options`
 
-| Name           | Type    | Default            | Description                                                                             |
-| :------------- | :------ | :----------------- | :---------------------------------------------------------------                        |
-| htmlTag        | string  | 'span'             | custom highlight HTML Tag wrapper                                                       |
-| hlClass        | string  | 'text-highlight'   | custom highlight class                                                                  |
-| matchAll       | boolean | true               | match all instances of the query in text message, not just one                          |
-| caseSensitive  | boolean | false              | match query text distinguish between uppercase (capital) and lowercase (small) letters  |
-
+| Name          | Type    | Default          | Description                                                                            |
+| :------------ | :------ | :--------------- | :------------------------------------------------------------------------------------- |
+| htmlTag       | string  | 'span'           | custom highlight HTML Tag wrapper                                                      |
+| hlClass       | string  | 'text-highlight' | custom highlight class                                                                 |
+| matchAll      | boolean | true             | match all instances of the query in text message, not just one                         |
+| caseSensitive | boolean | false            | match query text distinguish between uppercase (capital) and lowercase (small) letters |
 
 ### Css Styles
 
 Use these css styles in your html code to highlight the found text.
+
 ```css
 :root {
   --light-blue-color: #b1d9ff;
@@ -115,8 +118,6 @@ Use these css styles in your html code to highlight the found text.
   border: 1px solid var(--dark-blue-color);
 }
 ```
-
-
 
 ## :electric_plug: Powered by [DailyBot](https://www.dailybot.com?utm_source=dailybotopensource&utm_medium=search-text-highlight)
 

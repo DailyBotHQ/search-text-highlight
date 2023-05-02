@@ -1,10 +1,10 @@
 {
-	"name": "Search Text Highlight",
-	"dockerComposeFile": "../docker/local/docker-compose.yaml",
-	"service": "searchtexthl",
-	"workspaceFolder": "/app",
-	"runServices": ["searchtexthl"],
-	"customizations": {
+  "name": "Search Text Highlight",
+  "dockerComposeFile": "../docker/local/docker-compose.yaml",
+  "service": "searchtexthl",
+  "workspaceFolder": "/app",
+  "runServices": ["searchtexthl"],
+  "customizations": {
     "settings": {
       "terminal.integrated.shell.linux": "/bin/bash"
     },
