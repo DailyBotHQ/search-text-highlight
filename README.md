@@ -26,7 +26,7 @@ Import
 > import searchTextHL from 'search-text-highlight'
 ```
 
-Basic usage.
+Basic usage
 
 ```javascript
 > const text = 'This is a simple but an amazing tool for text highlight 😎.'
