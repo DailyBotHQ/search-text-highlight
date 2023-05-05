@@ -4,6 +4,7 @@ This tool allow find a string or substring from a text and highlight it with htm
 
 ---
 
+[![Code Check && Release](https://github.com/DailyBotHQ/search-text-highlight/actions/workflows/release_and_publish.yml/badge.svg?branch=main)](https://github.com/DailyBotHQ/search-text-highlight/actions/workflows/release_and_publish.yml)
 [![GitHub license](https://img.shields.io/github/license/DailyBotHQ/search-text-highlight)](https://github.com/DailyBotHQ/search-text-highlight/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/DailyBotHQ/search-text-highlight)](https://github.com/DailyBotHQ/search-text-highlight)
 [![total downloads](https://img.shields.io/npm/dt/search-text-highlight.svg)](https://www.npmjs.com/package/search-text-highlight)
