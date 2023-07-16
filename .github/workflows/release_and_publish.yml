@@ -84,8 +84,8 @@ jobs:
           NOTIFICATION_MESSAGE+="> *Repository:* <https://github.com/$GITHUB_REPOSITORY|$GITHUB_REPOSITORY>"$'\n'
           NOTIFICATION_MESSAGE+="> *User Actor:* $GITHUB_ACTOR"$'\n\n'
           NOTIFICATION_MESSAGE+="> *Pull request:* <https://github.com/$GITHUB_REPOSITORY/pull/${{ github.event.pull_request.number }}|#${{github.event.pull_request.number}}>"$'\n'
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          PR_BODY="${{ github.event.pull_request.body }}"
+          PR_TITLE='${{ github.event.pull_request.title }}'
+          PR_BODY='${{ github.event.pull_request.body }}''
           PR_BODY=$(echo $PR_BODY | sed 's/\r/\n/g')
           NOTIFICATION_MESSAGE+="> *Pull request size label:* $SIZE_LABEL_FOUND_RESULT"$'\n'
           NOTIFICATION_MESSAGE+="> *Pull request title:*"$'\n'
@@ -382,8 +382,8 @@ jobs:
           fi
           NOTIFICATION_MESSAGE+=""$'\n'
           NOTIFICATION_MESSAGE+="> *Pull request:* <https://github.com/$GITHUB_REPOSITORY/pull/${{ github.event.pull_request.number }}|#${{github.event.pull_request.number}}>"$'\n'
-          PR_TITLE="${{ github.event.pull_request.title }}"
-          PR_BODY="${{ github.event.pull_request.body }}"
+          PR_TITLE='${{ github.event.pull_request.title }}'
+          PR_BODY='${{ github.event.pull_request.body }}''
           PR_BODY=$(echo $PR_BODY | sed 's/\r/\n/g')
           NOTIFICATION_MESSAGE+="> *Pull request size label:* $SIZE_LABEL_FOUND_RESULT"$'\n'
           NOTIFICATION_MESSAGE+="> *Pull request title:*"$'\n'
