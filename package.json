@@ -24,7 +24,9 @@
     "dev": "nodemon src/index.ts",
     "build": "webpack --mode production --progress",
     "build:dev": "webpack --mode development --progress",
-    "build:tsc": "tsc --build tsconfig.json"
+    "build:tsc": "tsc --build tsconfig.json",
+    "ncu:check": "ncu",
+    "ncu:upgrade": "ncu -u"
   },
   "repository": {
     "type": "git",
@@ -40,22 +42,23 @@
   "devDependencies": {
     "@types/chai": "4.3.5",
     "@types/mocha": "10.0.1",
-    "@types/node": "20.1.0",
-    "@typescript-eslint/eslint-plugin": "5.59.2",
-    "@typescript-eslint/parser": "5.59.2",
+    "@types/node": "20.4.2",
+    "@typescript-eslint/eslint-plugin": "6.0.0",
+    "@typescript-eslint/parser": "6.0.0",
     "chai": "4.3.7",
     "clean-webpack-plugin": "4.0.0",
-    "eslint": "8.40.0",
+    "eslint": "8.45.0",
     "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-prettier": "5.0.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-webpack-plugin": "4.0.1",
     "mocha": "10.2.0",
-    "nodemon": "2.0.22",
-    "ts-loader": "9.4.2",
+    "nodemon": "3.0.1",
+    "ts-loader": "9.4.4",
     "ts-node": "10.9.1",
-    "typescript": "5.0.4",
-    "webpack": "5.82.0",
-    "webpack-cli": "5.0.2"
+    "typescript": "5.1.6",
+    "webpack": "5.88.1",
+    "webpack-cli": "5.1.4",
+    "npm-check-updates": "16.10.15"
   }
 }
