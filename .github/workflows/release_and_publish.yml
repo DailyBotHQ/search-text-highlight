@@ -12,13 +12,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check_pr_size_label:
+  prepare_pr_notification_message:
     if: github.event.pull_request.merged == true
     name: 'Check PR Size Label'
     runs-on: ubuntu-latest
     steps:
       - name: Step 1 - Check pr size label
-        id: check_pr_size_label_step
+        id: prepare_pr_notification_message
         env:
           ENV_LABELS: ${{ toJSON(github.event.pull_request.labels) }}
           SIZE_LABELS: >-
@@ -42,29 +42,10 @@ jobs:
             for size_label in "${SIZE_LABELS_ARR[@]}"; do
               if [[ "$found_label" == "$size_label" ]]; then
                 SIZE_LABEL_FOUND=$found_label
-                echo "Label 'SIZE_LABEL_FOUND' found in SIZE_LABELS"
               fi
             done
           done
-          echo "size_label_found=$SIZE_LABEL_FOUND" >> $GITHUB_OUTPUT
 
-    outputs:
-      size_label_found: ${{ steps.check_pr_size_label_step.outputs.size_label_found }}
-
-  notify_on_channel_start:
-    needs: check_pr_size_label
-    if: github.event.pull_request.merged == true
-    name: 'Notify on channel - Start'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Step 1 - 🔔 Send notification on channel
-        env:
-          NEEDS_JSON: ${{ toJSON(needs) }}
-          SIZE_LABEL_FOUND: ${{ needs.check_pr_size_label.outputs.size_label_found }}
-        run: |
           SIZE_LABEL_FOUND_EMOJI="❓"
           if [ "$SIZE_LABEL_FOUND" == "Size - XS" ]; then
             SIZE_LABEL_FOUND_EMOJI="🟢"
@@ -80,6 +61,7 @@ jobs:
             SIZE_LABEL_FOUND_EMOJI="🔴"
           fi
           SIZE_LABEL_FOUND_RESULT="$SIZE_LABEL_FOUND_EMOJI $SIZE_LABEL_FOUND"
+
           NOTIFICATION_MESSAGE="> *WorkFlow: <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID|$GITHUB_WORKFLOW>*"$'\n'
           NOTIFICATION_MESSAGE+="> *Repository:* <https://github.com/$GITHUB_REPOSITORY|$GITHUB_REPOSITORY>"$'\n'
           NOTIFICATION_MESSAGE+="> *User Actor:* $GITHUB_ACTOR"$'\n\n'
@@ -87,12 +69,31 @@ jobs:
           PR_TITLE='${{ github.event.pull_request.title }}'
           PR_BODY='${{ github.event.pull_request.body }}'
           PR_BODY=$(echo $PR_BODY | sed 's/\r/\n/g')
-          NOTIFICATION_MESSAGE+="> *Pull request size label:* $SIZE_LABEL_FOUND_RESULT"$'\n'
+          NOTIFICATION_MESSAGE+="> *Pull request size label:* $SIZE_LABEL_FOUND"$'\n'
           NOTIFICATION_MESSAGE+="> *Pull request title:*"$'\n'
           NOTIFICATION_MESSAGE+="> \`\`\`🚩 $PR_TITLE\`\`\`"$'\n'
           NOTIFICATION_MESSAGE+="> *Pull request body content:*"$'\n'
           NOTIFICATION_MESSAGE+="> \`\`\`$(echo $PR_BODY | sed 's/⬆️/\n⬆️/g')\`\`\`"$'\n\n'
-          NOTIFICATION_MESSAGE="> *👉 #$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - 🏁 DEPLOYMENT STARTED*"$'\n\n'"$NOTIFICATION_MESSAGE"
+          echo "notification_message=$NOTIFICATION_MESSAGE" >> $GITHUB_OUTPUT
+
+    outputs:
+      notification_message: ${{ steps.prepare_pr_notification_message.outputs.notification_message }}
+
+  notify_on_channel_start:
+    needs: prepare_pr_notification_message
+    if: github.event.pull_request.merged == true
+    name: 'Notify on channel - Start'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Step 1 - 🔔 Send notification on channel
+        env:
+          NOTIFICATION_MESSAGE_BODY: ${{ needs.prepare_pr_notification_message.outputs.notification_message }}
+        run: |
+          NOTIFICATION_MESSAGE="> *👉 #$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - 🏁 DEPLOYMENT STARTED*"$'\n\n'
+          NOTIFICATION_MESSAGE+="$NOTIFICATION_MESSAGE_BODY"
           JSON_DATA=$(jq -n \
                         --arg msg "$NOTIFICATION_MESSAGE" \
                         --arg channel "${{ vars.DAILYBOT_NOTIFICATION_LIVE_CHANNEL }}" \
