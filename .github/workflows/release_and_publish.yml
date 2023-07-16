@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare_pr_notification_message:
+  check_pr_size_label:
     if: github.event.pull_request.merged == true
     name: 'Check PR Size Label'
     runs-on: ubuntu-latest
