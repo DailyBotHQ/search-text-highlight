@@ -24,7 +24,9 @@
     "dev": "nodemon src/index.ts",
     "build": "webpack --mode production --progress",
     "build:dev": "webpack --mode development --progress",
-    "build:tsc": "tsc --build tsconfig.json"
+    "build:tsc": "tsc --build tsconfig.json",
+    "ncu:check": "ncu",
+    "ncu:upgrade": "ncu -u"
   },
   "repository": {
     "type": "git",
@@ -56,6 +58,7 @@
     "ts-node": "10.9.1",
     "typescript": "5.0.4",
     "webpack": "5.82.0",
-    "webpack-cli": "5.0.2"
+    "webpack-cli": "5.0.2",
+    "npm-check-updates": "16.10.15"
   }
 }
