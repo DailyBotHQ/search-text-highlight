@@ -12,8 +12,99 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check_pr_size_label:
+    if: github.event.pull_request.merged == true
+    name: 'Check PR Size Label'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1 - Check pr size label
+        id: check_pr_size_label_step
+        env:
+          ENV_LABELS: ${{ toJSON(github.event.pull_request.labels) }}
+          SIZE_LABELS: >-
+            "Size - XS","Size - S","Size - M","Size - L","Size - XL","Size - XXL"
+        run: |
+          IFS=',' read -ra SIZE_LABELS_ARR <<< "$SIZE_LABELS"
+          # Remove the quotes from SIZE_LABELS_ARR
+          SIZE_LABELS_ARR=("${SIZE_LABELS_ARR[@]//\"}")
+
+          # Get PR Labels
+          FOUND_LABELS_JSON=$(echo "$ENV_LABELS" | jq -r '.[] | .name')
+
+          readarray -t FOUND_LABELS <<<"$FOUND_LABELS_JSON"
+
+          echo "FOUND LABELS:"
+          printf '%s\n' "${FOUND_LABELS[@]}"
+
+          # Check if any of the labels in FOUND_LABELS is in SIZE_LABELS_ARR
+          SIZE_LABEL_FOUND=''
+          for found_label in "${FOUND_LABELS[@]}"; do
+            for size_label in "${SIZE_LABELS_ARR[@]}"; do
+              if [[ "$found_label" == "$size_label" ]]; then
+                SIZE_LABEL_FOUND=$found_label
+                echo "Label 'SIZE_LABEL_FOUND' found in SIZE_LABELS"
+              fi
+            done
+          done
+          echo "size_label_found=$SIZE_LABEL_FOUND" >> $GITHUB_OUTPUT
+
+    outputs:
+      size_label_found: ${{ steps.check_pr_size_label_step.outputs.size_label_found }}
+
+  notify_on_channel_start:
+    needs: check_pr_size_label
+    if: github.event.pull_request.merged == true
+    name: 'Notify on channel - Start'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Step 1 - 🔔 Send notification on channel
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          SIZE_LABEL_FOUND: ${{ needs.check_pr_size_label.outputs.size_label_found }}
+        run: |
+          SIZE_LABEL_FOUND_EMOJI="❓"
+          if [ "$SIZE_LABEL_FOUND" == "Size - XS" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟢"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - S" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟢"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - M" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟡"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - L" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟠"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - XL" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🔴"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - XXL" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🔴"
+          fi
+          SIZE_LABEL_FOUND_RESULT="$SIZE_LABEL_FOUND_EMOJI $SIZE_LABEL_FOUND"
+          NOTIFICATION_MESSAGE="> *WorkFlow: <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID|$GITHUB_WORKFLOW>*"$'\n'
+          NOTIFICATION_MESSAGE+="> *Repository:* <https://github.com/$GITHUB_REPOSITORY|$GITHUB_REPOSITORY>"$'\n'
+          NOTIFICATION_MESSAGE+="> *User Actor:* $GITHUB_ACTOR"$'\n\n'
+          NOTIFICATION_MESSAGE+="> *Pull request:* <https://github.com/$GITHUB_REPOSITORY/pull/${{ github.event.pull_request.number }}|#${{github.event.pull_request.number}}>"$'\n'
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          PR_BODY=$(echo $PR_BODY | sed 's/\r/\n/g')
+          NOTIFICATION_MESSAGE+="> *Pull request size label:* $SIZE_LABEL_FOUND_RESULT"$'\n'
+          NOTIFICATION_MESSAGE+="> *Pull request title:*"$'\n'
+          NOTIFICATION_MESSAGE+="> \`\`\`🚩 $PR_TITLE\`\`\`"$'\n'
+          NOTIFICATION_MESSAGE+="> *Pull request body content:*"$'\n'
+          NOTIFICATION_MESSAGE+="> \`\`\`$(echo $PR_BODY | sed 's/⬆️/\n⬆️/g')\`\`\`"$'\n\n'
+          NOTIFICATION_MESSAGE="> *👉 #$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - 🏁 DEPLOYMENT STARTED*"$'\n\n'"$NOTIFICATION_MESSAGE"
+          JSON_DATA=$(jq -n \
+                        --arg msg "$NOTIFICATION_MESSAGE" \
+                        --arg channel "${{ vars.DAILYBOT_NOTIFICATION_LIVE_CHANNEL }}" \
+                        '{message: $msg, target_channels: [$channel]}')
+          curl --location 'https://api.dailybot.com/v1/send-message/' \
+            --header "X-API-KEY: ${{ secrets.DAILYBOT_API_KEY }}" \
+            --header 'Content-Type: application/json' \
+            --data "$JSON_DATA"
+
   deploy_setup:
     if: github.event.pull_request.merged == true
+    needs: notify_on_channel_start
     name: 'Deploy - Setup Application'
     runs-on: ubuntu-latest
     strategy:
@@ -181,7 +272,7 @@ jobs:
           git config user.email "ops@dailybot.com"
       - name: Step 3 - 📄 Set GitHub release content "BODY" env var
         run: |
-          bash get_github_release_log.sh
+          bash .github/scripts/get_github_release_log.sh
           if [[ ! -f git_logs_output.txt ]]; then
             echo "⚠️ No description found for release body content."
             exit 1
@@ -219,6 +310,12 @@ jobs:
           echo "package_version=$(npm pkg get version)" >> $GITHUB_OUTPUT
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Step 8 - 🗑️ Deleting source branch
+        run: |
+          PR_MERGED=$(jq --raw-output .pull_request.merged "$GITHUB_EVENT_PATH")
+          if [ "$PR_MERGED" = "true" ]; then
+            git push origin --delete "${{ github.event.pull_request.head.ref }}"
+          fi
 
     outputs:
       package_version: ${{ steps.publish_npm_package.outputs.package_version }}
@@ -238,10 +335,18 @@ jobs:
                 "client_payload": {}
             }'
 
-  notify_on_channel:
+  notify_on_channel_end:
     needs:
-      [deploy_setup, deploy_validate_linters_and_code_format, deploy_tests, build, release_and_publish, cleanup_caches]
-    name: 'Notify on channel'
+      [
+        check_pr_size_label,
+        deploy_setup,
+        deploy_validate_linters_and_code_format,
+        deploy_tests,
+        build,
+        release_and_publish,
+        cleanup_caches,
+      ]
+    name: 'Notify on channel - End'
     if: always() && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -251,17 +356,43 @@ jobs:
       - name: Step 1 - 🔔 Send notification on channel
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
+          SIZE_LABEL_FOUND: ${{ needs.check_pr_size_label.outputs.size_label_found }}
         run: |
-          NOTIFICATION_MESSAGE="*WorkFlow: <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID|$GITHUB_WORKFLOW>*"$'\n'
-          NOTIFICATION_MESSAGE+="*Repository:* $GITHUB_REPOSITORY"$'\n'
-          NOTIFICATION_MESSAGE+="*User Actor:* $GITHUB_ACTOR"$'\n'
+          SIZE_LABEL_FOUND_EMOJI="❓"
+          if [ "$SIZE_LABEL_FOUND" == "Size - XS" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟢"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - S" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟢"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - M" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟡"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - L" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🟠"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - XL" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🔴"
+          elif [ "$SIZE_LABEL_FOUND" == "Size - XXL" ]; then
+            SIZE_LABEL_FOUND_EMOJI="🔴"
+          fi
+          SIZE_LABEL_FOUND_RESULT="$SIZE_LABEL_FOUND_EMOJI $SIZE_LABEL_FOUND"
+          NOTIFICATION_MESSAGE="> *WorkFlow: <https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID|$GITHUB_WORKFLOW>*"$'\n'
+          NOTIFICATION_MESSAGE+="> *Repository:* <https://github.com/$GITHUB_REPOSITORY|$GITHUB_REPOSITORY>"$'\n'
+          NOTIFICATION_MESSAGE+="> *User Actor:* $GITHUB_ACTOR"$'\n'
           PACKAGE_VERSION=$(echo "${NEEDS_JSON}" | jq -r ".release_and_publish.outputs.package_version")
           if [ ! -z "$PACKAGE_VERSION" ]; then
-            NOTIFICATION_MESSAGE+="*New Version:* $PACKAGE_VERSION"$'\n'
+            NOTIFICATION_MESSAGE+="> *New Version:* $PACKAGE_VERSION"$'\n'
           fi
-          NOTIFICATION_MESSAGE+="*Jobs:*"$'\n'
+          NOTIFICATION_MESSAGE+=""$'\n'
+          NOTIFICATION_MESSAGE+="> *Pull request:* <https://github.com/$GITHUB_REPOSITORY/pull/${{ github.event.pull_request.number }}|#${{github.event.pull_request.number}}>"$'\n'
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          PR_BODY=$(echo $PR_BODY | sed 's/\r/\n/g')
+          NOTIFICATION_MESSAGE+="> *Pull request size label:* $SIZE_LABEL_FOUND_RESULT"$'\n'
+          NOTIFICATION_MESSAGE+="> *Pull request title:*"$'\n'
+          NOTIFICATION_MESSAGE+="> \`\`\`🚩 $PR_TITLE\`\`\`"$'\n'
+          NOTIFICATION_MESSAGE+="> *Pull request body content:*"$'\n'
+          NOTIFICATION_MESSAGE+="> \`\`\`$(echo $PR_BODY | sed 's/⬆️/\n⬆️/g')\`\`\`"$'\n\n'
+          NOTIFICATION_MESSAGE+="> *Jobs:*"$'\n'
           INDEX=1
-          NEEDS_ORDER=("deploy_setup" "deploy_validate_linters_and_code_format" "deploy_tests" "build" "release_and_publish" "cleanup_caches")
+          NEEDS_ORDER=("check_pr_size_label" "deploy_setup" "deploy_validate_linters_and_code_format" "deploy_tests" "build" "release_and_publish" "cleanup_caches")
           DEPLOYMENT_SUCCESS="true"
 
           for key in "${NEEDS_ORDER[@]}"; do
@@ -278,19 +409,19 @@ jobs:
               DEPLOYMENT_SUCCESS="false"
               EMOJI="❓"
             fi
-            NOTIFICATION_MESSAGE+="• *Job $INDEX:* $key $EMOJI"$'\n'
+            NOTIFICATION_MESSAGE+="> • *Job $INDEX:* $key $EMOJI"$'\n'
             INDEX=$((INDEX+1))
           done
 
           if [ "$DEPLOYMENT_SUCCESS" == "true" ]; then
-            NOTIFICATION_MESSAGE="*#$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - 🚀 DEPLOYMENT SUCCESS:*"$'\n\n'"$NOTIFICATION_MESSAGE"
+            NOTIFICATION_MESSAGE="> *👉 #$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - 🚀 DEPLOYMENT SUCCESS*"$'\n\n'"$NOTIFICATION_MESSAGE"
           else
-            NOTIFICATION_MESSAGE="*#$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - @here ⚠️ DEPLOYMENT FAILED:*"$'\n\n'"$NOTIFICATION_MESSAGE"
+            NOTIFICATION_MESSAGE="> *👉 #$GITHUB_RUN_NUMBER ($GITHUB_REF_NAME) - @here ⚠️ DEPLOYMENT FAILED*"$'\n\n'"$NOTIFICATION_MESSAGE"
           fi
 
           JSON_DATA=$(jq -n \
                         --arg msg "$NOTIFICATION_MESSAGE" \
-                        --arg channel "${{ secrets.DAILYBOT_NOTIFICATION_CHANNEL }}" \
+                        --arg channel "${{ vars.DAILYBOT_NOTIFICATION_LIVE_CHANNEL }}" \
                         '{message: $msg, target_channels: [$channel]}')
           curl --location 'https://api.dailybot.com/v1/send-message/' \
             --header "X-API-KEY: ${{ secrets.DAILYBOT_API_KEY }}" \
