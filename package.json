@@ -45,9 +45,9 @@
     "@types/node": "20.11.19",
     "@types/glob": "8.1.0",
     "@types/minimatch": "5.1.2",
-    "@typescript-eslint/eslint-plugin": "7.0.1",
-    "@typescript-eslint/parser": "7.0.1",
-    "chai": "4.4.1",
+    "@typescript-eslint/eslint-plugin": "7.0.2",
+    "@typescript-eslint/parser": "7.0.2",
+    "chai": "5.1.0",
     "clean-webpack-plugin": "4.0.0",
     "eslint": "8.56.0",
     "eslint-plugin-import": "2.29.1",
@@ -59,7 +59,7 @@
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typescript": "5.3.3",
-    "webpack": "5.90.2",
+    "webpack": "5.90.3",
     "webpack-cli": "5.1.4",
     "npm-check-updates": "16.14.15"
   }
