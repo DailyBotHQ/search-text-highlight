@@ -42,11 +42,11 @@
   "devDependencies": {
     "@types/chai": "4.3.19",
     "@types/mocha": "10.0.7",
-    "@types/node": "22.5.2",
+    "@types/node": "22.5.4",
     "@types/glob": "8.1.0",
     "@types/minimatch": "5.1.2",
-    "@typescript-eslint/eslint-plugin": "8.4.0",
-    "@typescript-eslint/parser": "8.4.0",
+    "@typescript-eslint/eslint-plugin": "8.5.0",
+    "@typescript-eslint/parser": "8.5.0",
     "chai": "4.4.1",
     "clean-webpack-plugin": "4.0.0",
     "eslint": "8.57.0",
@@ -58,7 +58,7 @@
     "nodemon": "3.1.4",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
-    "typescript": "5.5.4",
+    "typescript": "5.6.2",
     "webpack": "5.94.0",
     "webpack-cli": "5.1.4",
     "npm-check-updates": "17.1.1"
